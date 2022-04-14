@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "exercise_template"
+name = "data_linking_exercise"
 version = "0.1.0"
 description = ""
 authors = ["filipgeppert <filip.geppert@gmail.com>"]
@@ -7,6 +7,9 @@ authors = ["filipgeppert <filip.geppert@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 pytest = "^7.1.1"
+mypy = "^0.942"
+pandas = "^1.4.2"
+pandera = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 
