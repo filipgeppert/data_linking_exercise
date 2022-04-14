@@ -49,7 +49,11 @@ def read_participant_dataframes() -> pd.DataFrame:
         columns=PARTICIPANT_COLUMN_MAPPING,
         inplace=True
     )
-    return pd.concat([df_alpha, df_beta, df_gamma]).reset_index(drop=True)
+
+    df_participants = pd.concat([df_alpha, df_beta, df_gamma]).reset_index(drop=True)
+    # Remove unnecessary columns
+    df_participants.drop(columns=['event_date', 'event_month'], inplace=True)
+    return df_participants
 
 
 def read_event_dataframe() -> pd.DataFrame:
@@ -85,8 +89,6 @@ def create_event_participants_dataframe(df_participants: pd.DataFrame, df_event_
 
 if __name__ == "__main__":
     df_participants = read_participant_dataframes()
-    # Remove unnecessary columns
-    df_participants.drop(columns=['event_date', 'event_month'], inplace=True)
 
     df_event_db = read_event_dataframe()
     # Make sure that event data is clean
