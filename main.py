@@ -1,5 +1,7 @@
-import pandas as pd
 import os
+
+import pandas as pd
+
 from src.schemas import EVENT_PARTICIPANTS_SCHEMA, EVENT_DB_SCHEMA
 
 pd.set_option("display.max_rows", None, "display.max_columns", None)
@@ -59,15 +61,7 @@ def read_event_dataframe() -> pd.DataFrame:
     return df_event_db
 
 
-if __name__ == "__main__":
-    df_participants = read_participant_dataframes()
-    # Remove unnecessary columns
-    df_participants.drop(columns=['event_date', 'event_month'], inplace=True)
-
-    df_event_db = read_event_dataframe()
-    # Make sure that event data is clean
-    EVENT_DB_SCHEMA.validate(df_event_db)
-
+def create_event_participants_dataframe(df_participants: pd.DataFrame, df_event_db: pd.DataFrame) -> pd.DataFrame:
     event_name_not_null = df_participants['event_name'].notnull()
     event_twitter_not_null = df_participants['event_twitter'].notnull()
 
@@ -86,6 +80,20 @@ if __name__ == "__main__":
             # Convert to best possible data type
             .convert_dtypes()
     )
+    return df_event_participants
+
+
+if __name__ == "__main__":
+    df_participants = read_participant_dataframes()
+    # Remove unnecessary columns
+    df_participants.drop(columns=['event_date', 'event_month'], inplace=True)
+
+    df_event_db = read_event_dataframe()
+    # Make sure that event data is clean
+    EVENT_DB_SCHEMA.validate(df_event_db)
+
+    df_event_participants = create_event_participants_dataframe(df_participants, df_event_db)
+
     # Make sure that at least one participant information point is present
     assert (df_event_participants[PARTICIPANT_COLUMNS].isnull().sum(axis=1) == 0).sum() == 0
 
